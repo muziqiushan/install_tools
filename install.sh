@@ -3,7 +3,6 @@
 
 #install node
 if [ ! -n $1 ]||[ $1 -ge 1 ];then
-    sudo yum install 
     curl -sL https://rpm.nodesource.com/setup_current.x | sudo bash -
     if [ $? -ne 0 ]
         echo "install node failed! continue: 1";exit;
