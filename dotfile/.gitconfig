@@ -1,0 +1,15 @@
+[http]
+	proxy = socks5://127.0.0.1:1080
+[https]
+	proxy = socks5://127.0.0.1:1080
+[user]
+	name = liyue
+[alias]
+	b = branch
+    c = checkout
+    d = git diff @{upstream}
+    p = pull -r
+    f = fetch origin master
+    s = stash
+    root = rev-parse --show-toplevel
+    uncommit = reset HEAD^

@@ -1,0 +1,396 @@
+autocmd BufEnter * silent! lcd %:p:h
+"let vmode's copy using by os
+set clipboard+=unnamed
+" set clipboard+=unnamedplus
+
+"set vertical split
+set spr
+
+
+"switch buffer vsplit
+set switchbuf=vsplit
+
+"set line number
+set nu
+
+"set max column number
+set tw=120
+
+"show the line and column number at the right down corner of the status bar;
+set ruler
+
+"ignore lowercase and uppercase when execute ':s' , '*' ,etc...
+set ignorecase
+
+
+"expand <tab> to ts number's space
+set expandtab
+
+"insert mod <BS><DEL> not work bug
+set backspace=indent,eol,start
+
+"used for count of tab expand spaces(when type <tab> in 'i' mod w)
+set ts=4
+:autocmd Filetype  javascript,jsx,vue,ts set ts=2
+
+"used for count of tab expand spaces(when type << ,>>  in 'n' mod w)
+set shiftwidth=4
+:autocmd Filetype  javascript,jsx,vue,ts set shiftwidth=2
+
+"show the match pair
+set showmatch
+
+"autoindent let the next line(when type <cr> in the i mod) indent same as  prev line
+set autoindent
+
+"autoindent more,such as 'if','else','{','}' will add one extra indent to next line
+set smartindent
+
+"print cmd info
+set showcmd
+
+"commend line auto completion in c mod
+set wildmenu
+
+"highlight *
+set hlsearch
+
+"open realtime search
+set incsearch
+
+"set guioptions+=a
+set mouse=a
+
+
+"all settings about encoding
+set encoding=utf-8
+set fileencoding=utf-8
+set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1
+set termencoding=utf-8
+set langmenu=zh_CN.UTF-8
+set termguicolors
+
+"let vim execute alias command in bashrc
+let $BASH_ENV = "~/.bashrc"
+
+"set auto complete options
+set completeopt=menu,menuone,preview,noinsert,noselect
+
+"""@set-option end
+
+"""@autocmd begin
+autocmd FileType * setl iskeyword+=-
+autocmd FileType php,blade setl iskeyword-=-
+autocmd FileType less setl ft=less.css
+" autocmd FileType vue setl ft=vue.css.javascript.html
+" autocmd BufRead,BufNewFile *.vue setlocal filetype=vue.html.javascript.css
+" autocmd FileType * setl fo=tq
+" autocmd FileType * let &l:dict=s:vimfile.'/bundle/vim-dict/dict/'.&ft.'.dict'
+
+" var_dump/debug
+autocmd FileType php,smarty nnoremap <buffer> <C-d> :call Debug("var_dump(",");exit;","$,-,>,.")<CR>
+autocmd FileType blade nnoremap <buffer> <C-d> :call Debug("{{var_dump(",")}}","$,-,>,.")<CR>
+autocmd FileType php,smarty nnoremap <buffer> <C-e> :call Debug("echo json_encode(",");exit;","$,-,>,.")<CR>
+autocmd FileType javascript,vue,jsx nnoremap <buffer> <C-d> :call Debug("console.log(",");","-,.,[,]")<CR>
+autocmd FileType cpp nnoremap <buffer> <C-d> :call Debug("cout<<","<<endl;")<CR>
+syntax on
+filetype plugin indent on
+"""@autocmd end
+
+
+"""@map begin
+nnoremap <F1> K
+nnoremap <F5> <C-O>
+nnoremap <F6> <C-I>
+nnoremap <F7> :silent! cw<cr>\|:lw<cr>
+nnoremap <F8> :silent! ccl<cr>\|:lcl<cr>
+nnoremap <F9> :silent! cn<cr>\|:lne<cr>
+nnoremap <F10> :silent! cp<cr>\|:lp<cr>
+nnoremap <F11> :BO<cr>
+nnoremap <F12> :qa!<cr>
+nnoremap <M-Left> :bp<cr>
+nnoremap <M-Right> :bn<cr>
+nnoremap <S-Left> :tabp<cr>
+nnoremap <S-Right> :tabn<cr>
+nnoremap <C-T> :tab split<cr>
+
+"多窗口之间跳转
+nnoremap <C-J> <C-W>j
+nnoremap <C-K> <C-W>k
+nnoremap <C-H> <C-W>h
+nnoremap <C-L> <C-W>l
+
+"多窗口时调整当前窗口的大小
+nnoremap <S-Up> <C-w>10+
+nnoremap <S-Down> <C-w>10-
+nnoremap <S-Left> <C-w>10<
+nnoremap <S-Right> <C-w>10>
+
+"对应于 'J'命令的合并俩行，'K'用于拆分一行
+nnoremap K i<cr><esc>
+"extra paste for combining comand: 'y$' + <c-p>
+nnoremap <C-p> o<space><esc><S-p>
+
+"关闭最近打开的窗口
+nnoremap <c-c> :bun#<CR>
+" 打开最近关闭的buffer
+nnoremap <c-o> :vs#<CR>
+"取消当前操作并保存
+nnoremap <C-u> u:w<CR>
+"恢复操作并保存
+nnoremap <C-r> <C-r>:w<CR>
+"垂直切分某一个buffer,eg:Vb {1/2/3}
+command! -nargs=1 -complete=buffer VB execute("vertical sb ".<f-args>)
+command! -nargs=1 -complete=file VD execute("vertical diffsplit ".<f-args>)
+command! -nargs=1 -complete=file T execute("tabe ".<f-args>)
+" for fault tolerant
+command! -nargs=0 W execute("w")
+command! TC execute("tabc")
+"""@map end
+
+
+"@vundle begin
+let s:MSWIN =   has("win16") || has("win32") || has("win64") || has("win95")
+if  s:MSWIN
+    autocmd! BufWritePost _vimrc source $VIM/_vimrc
+    source $VIMRUNTIME/menu.vim
+    " set rtp+=$VIM/vimfiles/bundle/Vundle.vim/
+    let s:vimfile = $vim.'/vimfiles/'
+else
+    "更新vimrc时另当前缓冲区全部重加载vimrc
+    autocmd! BufWritePost .vimrc source ~/.vimrc
+    " set rtp+=~/.vim/bundle/Vundle.vim/
+    set keywordprg=:help
+    let s:vimfile = '~/.vim/'
+endif
+if has("gui_running")
+    :behave mswin
+endif
+
+"""@plugin begin
+call plug#begin('~/.config/nvim/plugged')
+Plug 'stephpy/vim-php-cs-fixer'
+" Plug 'neoclide/coc.nvim',{'branch': 'release'}
+Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
+"
+"auto-complete
+" Plug 'Valloric/YouCompleteMe',
+" Plug 'w0rp/ale',
+" Plug 'shawncplus/phpcomplete.vim',
+" Plug 'frazrepo/vim-rainbow'
+Plug 'airblade/vim-gitgutter'
+Plug 'junegunn/fzf',
+Plug 'junegunn/fzf.vim',
+Plug 'tpope/vim-surround',
+Plug 'tpope/vim-abolish',
+Plug 'arthurxavierx/vim-caser',
+" Plug 'mg979/vim-visual-multi'
+" Plug 'terryma/vim-multiple-cursors',
+" Plug 'vim-scripts/AutoComplPop',
+" Plug 'SirVer/ultisnips',
+Plug 'honza/vim-snippets'
+Plug 'mattn/emmet-vim',
+Plug 'tomtom/tcomment_vim',
+Plug 'vim-scripts/CmdlineComplete'
+Plug 'asins/vim-dict',
+
+"format indent syntax-check
+" Plug 'mxw/vim-jsx',
+" Plug 'jwalton512/vim-blade'
+" Plug 'Chiel92/vim-autoformat',
+Plug 'sheerun/vim-polyglot',
+Plug 'andymass/vim-matchup',
+
+"dir-tree file-explorer
+Plug 'scrooloose/nerdtree',
+" Plug 'ludovicchabant/vim-gutentags',
+
+"appearance colorful
+" Plug 'powerline/powerline',
+" Plug 'itchyny/lightline.vim'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'nanotech/jellybeans.vim',
+Plug 'altercation/vim-colors-solarized'
+
+"programming debug var_dump
+" Plug 'vim-vdebug/vdebug',
+Plug 'vim-vdebug/vdebug',
+Plug 'muziqiushan/vim-bufonly',
+Plug 'muziqiushan/vim-var_dump',
+Plug 'muziqiushan/vim-doxygen',
+Plug 'alvan/vim-php-manual',
+" Plug 'DoxygenToolkit.vim',
+" Plug 'jelera/vim-javascript-syntax'
+" Plug 'Valloric/MatchTagAlways'
+" Plug 'ap/vim-css-color'
+" Plug 'groenewege/vim-less',
+" Plug 'mileszs/ack.vim',
+" Plug 'dbakker/vim-projectroot',
+" Plug 'bolasblack/gtrans.vim',
+" Plug 'ornicar/vim-php-doc',
+" Plug 'Python-mode-klen',
+call plug#end()
+"""@plugin end
+
+"@for plugin-airline
+let g:airline_statusline_ontop = 0
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#formatter = 'unique_tail'
+let g:airline#extensions#bufferline#enabled = 1
+let g:airline#extensions#bufferline#overwrite_variables = 1
+let g:airline#extensions#fugitiveline#enabled = 1
+let g:airline#extensions#tabline#buffer_nr_show = 1
+let g:airline#extensions#tabline#show_splits = 1 "enable/disable displaying open splits per tab (only when tabs are opened). >
+" let g:airline#extensions#tabline#show_buffers = 1 " enable/disable displaying buffers with a single tab
+let g:airline#extensions#tabline#tab_nr_type = 1 " tab number
+
+"@for plugin-fzf
+let mapleader = "\<Space>"
+" fzf.vim's command Gfiles
+" let $FZF_DEFUALT_COMMAND='git-ls '
+nnoremap <leader>b :Buffers<CR>
+nnoremap <leader>f :Files $PWD<cr>
+nnoremap \f :exe 'GFiles -ix '.expand("<cword>").'*'<cr>
+nnoremap <leader>g :exe 'GGrep ' .expand("<cword>")<cr>
+nnoremap <leader>r :GGrep
+command! -bang -nargs=* GGrep
+  \ call fzf#vim#grep(
+  \   'grep -ir --color '.shellescape(<q-args>), 0,
+  \   fzf#vim#with_preview({'dir': $PWD}), <bang>0)
+
+"@for plugin-gutentags
+let g:gutentags_ctags_extra_args = ['--fields=+l']
+let g:gutentags_modules=['ctags']
+let g:gutentags_exclude_project_root=['/home/liyue']
+let g:gutentags_file_list_command = {
+            \ 'markers': {
+            \ '.git': 'git ls-files',
+            \ '.hg': 'hg files',
+            \ },
+            \ }
+let g:gutentags_ctags_exclude = ['*.css', '*.html','*.log','*.cache','*/vendor/*','*/storage/*','*/.git/*','*.js','*.blade.php']
+" let g:gutentags_trace = 1
+" let g:gutentags_cache_dir = '~/.vim/gutentags'
+
+"@for plugin-vdebug
+let g:vdebug_options= {
+            \    "port" : 9001,
+            \    "server" : '0.0.0.0',
+            \    "break_on_open" : 0,
+            \    "timeout" : 300,
+            \    "continuous_mode" : 1,
+            \    "debug_file" : '~/vdebug.log',
+            \    "debug_file_level" : 2,
+            \}
+let g:vdebug_keymap = {
+            \    "set_breakpoint" : "<F3>",
+            \    "run" : "<F4>",
+            \    "run_to_cursor" : "<F9>",
+            \    "step_over" : "<F10>",
+            \    "step_into" : "<F11>",
+            \    "step_out" : "<S-F11>",
+            \    "close" : "<F7>",
+            \    "detach" : "<F6>",
+            \    "get_context" : "<F2>",
+            \    "eval_under_cursor" : "<F1>",
+            \    "eval_visual" : "<F1>",
+            \}
+nmap <s-f12> :BreakpointRemove *<cr>
+"@insert mode: to the end/begin of current line;
+inoremap <C-e> <Esc>A
+inoremap <C-a> <Esc>I
+
+"@for plugin-comment
+" let g:tcomment#filetype#guess=1
+nmap q :q<CR>
+nmap Q :tabc<CR>
+nmap ; :TComment\|:w<CR>
+vmap ; :TCommentBlock\|:w<CR>
+vmap ' a'
+vmap " a"
+vmap s as
+vmap p ap
+vmap ( a(
+vmap [ a[
+vmap { a{
+vmap < a<
+
+"@for plugin-nerdtree
+nnoremap <leader>t :NERDTreeVCS<cr>
+nnoremap \t :NERDTreeVCS<cr>
+:autocmd Filetype nerdtree nnoremap <buffer> <c-b> :Bookmark 
+:autocmd Filetype nerdtree nnoremap <buffer> <c-o> :OpenBookmark 
+:autocmd Filetype nerdtree nmap <buffer> <c-v> s 
+let g:jellybeans_overrides = { 'background': { 'guibg': '000000' }}
+colorscheme jellybeans
+"@for plugin-coc.nvim
+let g:coc_enable_locationlist = 1
+let g:coc_suppress_error = 1
+let g:coc_node_path = systemlist('which node')[0]
+let g:coc_global_extensions = [
+"coc-css", "coc-dictionary", "coc-emoji", "coc-eslint", "coc-go", "coc-gocode", "coc-highlight", "coc-html", "coc-java", "coc-jest", "coc-json", "coc-leetcode", "coc-lists", "coc-neosnippet", "coc-omni", "coc-pairs", "coc-phpls", "coc-prettier", "coc-pyls", "coc-rls", "coc-snippets", "coc-solargraph", "coc-stylelint", "coc-tag", "coc-tailwindcss", "coc-tslint", "coc-tsserver", "coc-ultisnips", "coc-vetur", "coc-vimtex", "coc-word", "coc-wxml", "coc-yaml", "coc-yank" 
+]
+nnoremap <M-leftmouse> :call CocAction('jumpDefinition')<CR>
+nnoremap <M-S-leftmouse> :call CocAction('jumpDefinition','vsplit')<CR>
+nnoremap <2-leftmouse> :call CocAction('jumpReferences',v:false)<CR>
+nnoremap <silent> <leader>d  :CocList -N --normal diagnostics<CR>
+nnoremap <silent> <leader>o  :CocList -N --normal outline<CR>
+nnoremap <silent> <leader>w  :CocList -N -I words<CR>
+nnoremap <silent> <leader>s  :CocList -N -I symbols<CR>
+nnoremap <silent> <leader>m  :CocList -N mru<CR>
+nnoremap <silent> <leader>y  :CocList -N yank<CR>
+" nnoremap <silent> <leader>r  :CocList -I grep -i -F<CR>
+" nnoremap <silent> <leader>g  :exe 'CocList -N grep -F '.expand('<cword>')<CR>
+nmap [ <Plug>(coc-diagnostic-prev-error)
+nmap ] <Plug>(coc-diagnostic-next-error)
+autocmd CursorHold * silent call CocActionAsync('highlight')
+nnoremap <enter> :call CocActionAsync('doHover')<cr>
+" @hack 格式化后 将大括号替换成相同行
+nmap <leader><leader> :call CocAction('format') \| %s#\n^ *{# {#g<cr>
+" nmap <leader><leader> :call CocAction('format') <cr>
+vmap <leader> <Plug>(coc-format-selected)
+" inoremap <silent><expr> <TAB>
+"       \ pumvisible() ? "\<C-n>" :
+"       \ <SID>check_back_space() ? "\<TAB>" :
+"       \ coc#refresh()
+" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<CR>"
+" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+"@for coc async stuck : prevent <enter> prompt
+"
+let g:multi_cursor_select_all_word_key = '<c-m>'
+let g:caser_prefix='-'
+let g:php_manual_online_search_shortcut = ''
+let g:fzf_history_dir= '~/.fzf-history'
+" let g:rainbow_active = 1
+" autocmd FileType vue syntax sync fromstart
+
+" gitgutter.vim
+let g:gitgutter_highlight_lines=1 
+let g:gitgutter_highlight_lineenrs=1 
+let g:gitgutter_enabled =0
+nnoremap gp :GitGutterPreviewHunk<cr>
+nnoremap gn :GitGutterNextHunk<cr>
+nnoremap g] :GitGutterNextHunk<cr>
+nnoremap g[ :GitGutterPrevHunk<cr>
+nnoremap gu :GitGutterUndoHunk<cr>
+nnoremap gs :GitGutterStageHunk<cr>
+nnoremap gt :GitGutterToggle<cr>
+" if hidden not set, TextEdit might fail.
+set hidden
+
+" Better display for messages
+set cmdheight=2
+
+" don't give |ins-completion-menu| messages.
+set shortmess=aFc
+
+"Time in milliseconds to wait for a mapped sequence to complete."
+set timeoutlen=500
+" Smaller updatetime for CursorHold & CursorHoldI
+set updatetime=300
+
+
+" highlight CocHoverRange ctermfg=Red  guifg=#ffff00
+" highlight CocCursorRange ctermfg=Red  guifg=#ff0000
+" @todo suppress coc error
