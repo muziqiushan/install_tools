@@ -19,8 +19,8 @@ if [ ! -n $1 ]||[ $1 -ge 2 ];then
     chmod u+x nvim.appimage
     mkdir -p $HOME/bin
     mv nvim.appimage $HOME/bin/
-    ln -s $PWD/nvim.appimage nvim
-    ln -s $PWD/nvim.appimage n
+    ln -s $HOME/nvim.appimage nvim
+    ln -s $HOME/nvim.appimage n
     nvim --headless +PlugInstall +qall
 fi
 #install zsh
